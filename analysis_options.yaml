@@ -1,11 +1,1 @@
-# Fail CI only on Dart errors, not lints or hints.
-analyzer:
-  errors:
-    deprecated_member_use: ignore
-    unused_element: ignore
-    unused_field: ignore
-    unused_import: ignore
-    unused_local_variable: ignore
-    dead_code: ignore
-    todo: ignore
-    unnecessary_null_comparison: ignore
+# No extra lints. `flutter analyze` should only fail on compile errors.
