@@ -66,91 +66,49 @@ class _HomeShellState extends State<HomeShell> {
   }
 }
 
-/// Top strip with avatar, name and menu.
-class _TopBar extends StatelessWidget {
-  const _TopBar({required this.title});
-
-  final String title;
+/// Overflow menu for About / Reset, shown on the greeting card.
+class _MoreMenu extends StatelessWidget {
+  const _MoreMenu();
 
   @override
   Widget build(BuildContext context) {
-    final AppStore store = AppStore.instance;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(18, 10, 12, 0),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: Pal.inkSoft,
-                    letterSpacing: 1.1,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      store.name.isEmpty ? 'Learner' : store.name,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w800,
-                        color: Pal.ink,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Avatar(gender: store.gender, size: 52),
-          const SizedBox(width: 6),
-          PopupMenuButton<String>(
-            tooltip: 'More',
-            color: Pal.card,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18),
-            ),
-            onSelected: (String value) {
-              if (value == 'about') {
-                Navigator.of(context).push(MaterialPageRoute<void>(
-                  builder: (_) => const AboutScreen(),
-                ));
-              } else if (value == 'reset') {
-                _showResetSheet(context);
-              }
-            },
-            itemBuilder: (BuildContext context) => const <PopupMenuEntry<String>>[
-              PopupMenuItem<String>(
-                value: 'about',
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.favorite_outline, color: Pal.lavender),
-                    SizedBox(width: 10),
-                    Text('About Word Quest'),
-                  ],
-                ),
-              ),
-              PopupMenuItem<String>(
-                value: 'reset',
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.restart_alt, color: Pal.blush),
-                    SizedBox(width: 10),
-                    Text('Reset progress'),
-                  ],
-                ),
-              ),
+    return PopupMenuButton<String>(
+      tooltip: 'More',
+      color: Pal.card,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+      ),
+      onSelected: (String value) {
+        if (value == 'about') {
+          Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const AboutScreen(),
+          ));
+        } else if (value == 'reset') {
+          _showResetSheet(context);
+        }
+      },
+      itemBuilder: (BuildContext context) => const <PopupMenuEntry<String>>[
+        PopupMenuItem<String>(
+          value: 'about',
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.favorite_outline, color: Pal.lavender),
+              SizedBox(width: 10),
+              Text('About Word Quest'),
             ],
           ),
-        ],
-      ),
+        ),
+        PopupMenuItem<String>(
+          value: 'reset',
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.restart_alt, color: Pal.blush),
+              SizedBox(width: 10),
+              Text('Reset progress'),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -280,11 +238,8 @@ class DashboardView extends StatelessWidget {
         final int passedExams = store.totalExamPassed;
 
         return ListView(
-          padding: const EdgeInsets.only(bottom: 26),
+          padding: const EdgeInsets.only(top: 12, bottom: 26),
           children: <Widget>[
-            _TopBar(title: 'WORD QUEST'),
-            const SizedBox(height: 14),
-            // Hero greeting card with avatar (gender-based).
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: Container(
@@ -297,7 +252,7 @@ class DashboardView extends StatelessWidget {
                   ),
                   boxShadow: softShadow,
                 ),
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.fromLTRB(20, 16, 8, 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -313,7 +268,8 @@ class DashboardView extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Avatar(gender: store.gender, size: 58),
+                        Avatar(gender: store.gender, size: 52),
+                        const _MoreMenu(),
                       ],
                     ),
                     const SizedBox(height: 4),
