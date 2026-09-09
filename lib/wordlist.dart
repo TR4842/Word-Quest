@@ -8,9 +8,9 @@ import 'package:flutter/services.dart' show rootBundle;
 /// The JSON is produced from the workbook sources by `tool/export_vocab.py`,
 /// so the app never needs a network connection.
 class Vocab {
-  Vocab._();
+  const Vocab._();
 
-  static List<Topic> topics = <Topic>[];
+  static List<Topic> topics = const <Topic>[];
 
   static Topic byId(String id) {
     for (final Topic t in topics) {
@@ -101,8 +101,9 @@ class VocabItem {
   String get gapSentence {
     final String lower = term.toLowerCase();
     final String upper = term.toUpperCase();
-    final String title =
-        term.isEmpty ? term : term[0].toUpperCase() + term.substring(1).toLowerCase();
+    final String title = term.isEmpty
+        ? term
+        : '${term[0].toUpperCase()}${term.substring(1).toLowerCase()}';
     String s = ex;
     s = s.replaceAll(upper, '______');
     s = s.replaceAll(lower, '______');
@@ -126,7 +127,7 @@ class VocabItem {
 
 /// A topic (Word Smart, GRE 333, …) plus its day partition.
 class Topic {
-  Topic({required this.id, required this.title, required this.subtitle, required this.items});
+  const Topic({required this.id, required this.title, required this.subtitle, required this.items});
 
   final String id;
   final String title;

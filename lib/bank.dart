@@ -40,10 +40,10 @@ class _BankTabViewState extends State<BankTabView> {
               style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 6),
-            Text(
+            const Text(
               'Every wrong answer is saved here for review — separately for '
               'each topic. Practise them until they leave the bank!',
-              style: const TextStyle(color: Pal.inkSoft, height: 1.5),
+              style: TextStyle(color: Pal.inkSoft, height: 1.5),
             ),
             const SizedBox(height: 14),
             // Topic filter chips
@@ -174,7 +174,7 @@ class _TopicMistakeSection extends StatelessWidget {
             SoftCard(
               padding: const EdgeInsets.all(14),
               radius: 18,
-              color: accent.soft.withOpacity(0.6),
+              color: fade(accent.soft, 0.6),
               child: Row(
                 children: <Widget>[
                   const Icon(Icons.sentiment_satisfied_alt_outlined,

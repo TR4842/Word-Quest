@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'exam.dart' as exam_screen; // exam flow entry points
-import 'home.dart';
 import 'store.dart';
+import 'topic_card.dart';
 import 'theme.dart';
 import 'widgets.dart';
 import 'wordlist.dart';
@@ -113,7 +113,8 @@ class _LearnTopicScreenState extends State<LearnTopicScreen> {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: topic.totalDays,
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  separatorBuilder: (BuildContext context, int index) =>
+                      const SizedBox(width: 8),
                   itemBuilder: (BuildContext context, int d) {
                     final int day = d + 1;
                     final bool passed = stats.passed(day);
@@ -291,7 +292,7 @@ class _DayChip extends StatelessWidget {
             ? accent.main
             : accent.soft;
     final Color fg = locked
-        ? Pal.inkSoft.withOpacity(0.5)
+        ? fade(Pal.inkSoft, 0.5)
         : selected
             ? Colors.white
             : accent.main;
@@ -627,8 +628,8 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                 child: LinearProgressIndicator(
                   value: (_pos) / _total,
                   minHeight: 8,
-                  backgroundColor: Colors.white.withOpacity(0.7),
-                  valueColor: AlwaysStoppedAnimation<Color>(accent.main),
+                  backgroundColor: fade(Colors.white, 0.7),
+                  valueColor: AlwaysStoppedAnimation<Color?>(accent.main),
                 ),
               ),
             ),
@@ -643,13 +644,13 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                     duration: const Duration(milliseconds: 220),
                     child: _flipped
                         ? _CardBack(
-                            key: ValueKey<int>('b$idx$_pos'),
+                            key: ValueKey<String>('b$idx$_pos'),
                             topic: widget.topic,
                             item: item,
                             accent: accent,
                           )
                         : _CardFront(
-                            key: ValueKey<int>('f$idx$_pos'),
+                            key: ValueKey<String>('f$idx$_pos'),
                             item: item,
                             accent: accent,
                           ),
@@ -691,7 +692,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
               _flipped
                   ? 'Tap the card to flip back'
                   : 'Tap the card to reveal the meaning',
-              style: TextStyle(color: accent.main.withOpacity(0.8), fontSize: 12.5),
+              style: TextStyle(color: fade(accent.main, 0.8), fontSize: 12.5),
             ),
             const SizedBox(height: 18),
           ],

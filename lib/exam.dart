@@ -2,15 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'home.dart';
+import 'exam_engine.dart' as engine;
 import 'store.dart';
+import 'topic_card.dart';
 import 'theme.dart';
 import 'widgets.dart';
 import 'wordlist.dart';
-
-/// Question model + exam generation live in the pure `exam_engine.dart`
-/// library; this file is the exam *flow* UI.
-import 'exam_engine.dart' as engine;
 
 /// Exam tab: pick a topic then a day exam.
 class ExamTabView extends StatelessWidget {
@@ -25,17 +22,17 @@ class ExamTabView extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(20, 6, 20, 2),
           child: UserStrip(label: 'Timed day-wise exams'),
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 6, 20, 12),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(20, 6, 20, 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text(
+              Text(
                 'Exams',
                 style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800),
               ),
-              const SizedBox(height: 6),
-              const Text(
+              SizedBox(height: 6),
+              Text(
                 'Each topic has its own day-wise exam. The syllabus is exactly '
                 'that day’s learning goal. Score 90% to unlock the next day.',
                 style: TextStyle(color: Pal.inkSoft, height: 1.5),
@@ -112,12 +109,12 @@ class ExamTopicScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    Text(
+                    const Text(
                       'Choose 20, 25 or 30 questions. The timer runs for half '
                       'that many minutes (20 questions → 10 minutes). Every '
                       'attempt shuffles the questions and options. Wrong '
                       'answers go to your mistake bank.',
-                      style: const TextStyle(color: Pal.inkSoft, height: 1.5),
+                      style: TextStyle(color: Pal.inkSoft, height: 1.5),
                     ),
                   ],
                 ),
@@ -189,7 +186,7 @@ class _DayExamRow extends StatelessWidget {
                     : passed
                         ? Icons.emoji_events_rounded
                         : Icons.edit_note_outlined,
-                color: locked ? Pal.inkSoft.withOpacity(0.5) : accent.main,
+                color: locked ? fade(Pal.inkSoft, 0.5) : accent.main,
               ),
             ),
             const SizedBox(width: 12),
@@ -217,7 +214,7 @@ class _DayExamRow extends StatelessWidget {
             ),
             FilledButton(
               style: FilledButton.styleFrom(
-                backgroundColor: locked ? Pal.inkSoft.withOpacity(0.25) : accent.main,
+                backgroundColor: locked ? fade(Pal.inkSoft, 0.25) : accent.main,
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               ),
               onPressed: locked
@@ -291,7 +288,7 @@ class _ExamStartScreenState extends State<ExamStartScreen> {
             const SizedBox(height: 10),
             Row(
               children: <Widget>[
-                for (final int n in <int>[20, 25, 30]) ...<Widget>[
+                for (final int n in const <int>[20, 25, 30]) ...<Widget>[
                   Expanded(
                     child: _CountChoice(
                       count: n,
@@ -410,7 +407,7 @@ class _CountChoice extends StatelessWidget {
               'questions',
               style: TextStyle(
                 fontSize: 11.5,
-                color: selected ? Colors.white.withOpacity(0.9) : Pal.inkSoft,
+                color: selected ? fade(Colors.white, 0.9) : Pal.inkSoft,
               ),
             ),
           ],
@@ -506,9 +503,10 @@ class _ExamPlayerScreenState extends State<ExamPlayerScreen> {
           ),
         ) ??
         false;
-    if (leave && mounted) {
-      Navigator.of(context).pop();
+    if (!leave || !mounted) {
+      return;
     }
+    Navigator.of(context).pop();
   }
 
   void _answer(int optionIndex) {
@@ -688,7 +686,7 @@ class _ExamPlayerScreenState extends State<ExamPlayerScreen> {
                     value: (_pos + 1) / _questions.length,
                     minHeight: 8,
                     backgroundColor: Pal.border,
-                    valueColor: AlwaysStoppedAnimation<Color>(_accent.main),
+                    valueColor: AlwaysStoppedAnimation<Color?>(_accent.main),
                   ),
                 ),
                 const SizedBox(height: 10),

@@ -36,7 +36,7 @@ void main() {
     });
 
     test('gap sentence blanks the term', () {
-      final VocabItem item = VocabItem(
+      const VocabItem item = VocabItem(
         term: 'ABASH',
         en: '',
         bn: 'লজ্জিত করা',
@@ -94,15 +94,15 @@ void main() {
 
     test('question kinds per topic are sane', () {
       expect(allowedQuestionTypes(makeTopic('wordSmart', 5)),
-          <String>[qMeaning, qSynonym, qAntonym, qGap]);
+          const <String>[qMeaning, qSynonym, qAntonym, qGap]);
       expect(allowedQuestionTypes(makeTopic('gre333', 5)),
-          <String>[qMeaning, qSynonym, qAntonym]);
+          const <String>[qMeaning, qSynonym, qAntonym]);
       expect(allowedQuestionTypes(makeTopic('previousYear', 5)),
-          <String>[qMeaning, qSynonym, qAntonym]);
+          const <String>[qMeaning, qSynonym, qAntonym]);
       expect(allowedQuestionTypes(makeTopic('oneWord', 5)),
-          <String>[qMeaning, qReverse]);
+          const <String>[qMeaning, qReverse]);
       expect(allowedQuestionTypes(makeTopic('idioms', 5)),
-          <String>[qMeaning, qReverse]);
+          const <String>[qMeaning, qReverse]);
     });
   });
 

@@ -6,6 +6,7 @@ import 'learn.dart';
 import 'menus.dart';
 import 'store.dart';
 import 'theme.dart';
+import 'topic_card.dart';
 import 'widgets.dart';
 import 'wordlist.dart';
 
@@ -65,91 +66,49 @@ class _HomeShellState extends State<HomeShell> {
   }
 }
 
-/// Top strip with avatar, name and menu.
-class _TopBar extends StatelessWidget {
-  const _TopBar({required this.title});
-
-  final String title;
+/// Overflow menu for About / Reset, shown on the greeting card.
+class _MoreMenu extends StatelessWidget {
+  const _MoreMenu();
 
   @override
   Widget build(BuildContext context) {
-    final AppStore store = AppStore.instance;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(18, 10, 12, 0),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: Pal.inkSoft,
-                    letterSpacing: 1.1,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      store.name.isEmpty ? 'Learner' : store.name,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w800,
-                        color: Pal.ink,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Avatar(gender: store.gender, size: 52),
-          const SizedBox(width: 6),
-          PopupMenuButton<String>(
-            tooltip: 'More',
-            color: Pal.card,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18),
-            ),
-            onSelected: (String value) {
-              if (value == 'about') {
-                Navigator.of(context).push(MaterialPageRoute<void>(
-                  builder: (_) => const AboutScreen(),
-                ));
-              } else if (value == 'reset') {
-                _showResetSheet(context);
-              }
-            },
-            itemBuilder: (BuildContext context) => const <PopupMenuEntry<String>>[
-              PopupMenuItem<String>(
-                value: 'about',
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.favorite_outline, color: Pal.lavender),
-                    SizedBox(width: 10),
-                    Text('About Word Quest'),
-                  ],
-                ),
-              ),
-              PopupMenuItem<String>(
-                value: 'reset',
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.restart_alt, color: Pal.blush),
-                    SizedBox(width: 10),
-                    Text('Reset progress'),
-                  ],
-                ),
-              ),
+    return PopupMenuButton<String>(
+      tooltip: 'More',
+      color: Pal.card,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+      ),
+      onSelected: (String value) {
+        if (value == 'about') {
+          Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const AboutScreen(),
+          ));
+        } else if (value == 'reset') {
+          _showResetSheet(context);
+        }
+      },
+      itemBuilder: (BuildContext context) => const <PopupMenuEntry<String>>[
+        PopupMenuItem<String>(
+          value: 'about',
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.favorite_outline, color: Pal.lavender),
+              SizedBox(width: 10),
+              Text('About Word Quest'),
             ],
           ),
-        ],
-      ),
+        ),
+        PopupMenuItem<String>(
+          value: 'reset',
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.restart_alt, color: Pal.blush),
+              SizedBox(width: 10),
+              Text('Reset progress'),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -279,11 +238,8 @@ class DashboardView extends StatelessWidget {
         final int passedExams = store.totalExamPassed;
 
         return ListView(
-          padding: const EdgeInsets.only(bottom: 26),
+          padding: const EdgeInsets.only(top: 12, bottom: 26),
           children: <Widget>[
-            _TopBar(title: 'WORD QUEST'),
-            const SizedBox(height: 14),
-            // Hero greeting card with avatar (gender-based).
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: Container(
@@ -296,7 +252,7 @@ class DashboardView extends StatelessWidget {
                   ),
                   boxShadow: softShadow,
                 ),
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.fromLTRB(20, 16, 8, 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -312,7 +268,8 @@ class DashboardView extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Avatar(gender: store.gender, size: 58),
+                        Avatar(gender: store.gender, size: 52),
+                        const _MoreMenu(),
                       ],
                     ),
                     const SizedBox(height: 4),
@@ -377,7 +334,7 @@ class DashboardView extends StatelessWidget {
             Center(
               child: Text(
                 'Tap a topic to start learning or taking exams',
-                style: TextStyle(color: Pal.inkSoft.withOpacity(0.85), fontSize: 12.5),
+                style: TextStyle(color: fade(Pal.inkSoft, 0.85), fontSize: 12.5),
               ),
             ),
           ],
@@ -406,7 +363,7 @@ class _MiniStat extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.75),
+          color: fade(Colors.white, 0.75),
           borderRadius: BorderRadius.circular(18),
         ),
         child: Column(
@@ -433,123 +390,3 @@ class _MiniStat extends StatelessWidget {
   }
 }
 
-/// One topic row with its progress bar. Tap opens the topic — in learning
-/// mode (flashcards + day plan) or exam mode.
-class TopicCard extends StatelessWidget {
-  const TopicCard({super.key, required this.index, this.examMode = false});
-
-  final int index;
-  final bool examMode;
-
-  @override
-  Widget build(BuildContext context) {
-    final Topic topic = Vocab.topics[index];
-    final TopicColor accent = topicAccents[index % topicAccents.length];
-    final AppStore store = AppStore.instance;
-    final int mastered = store.statsFor(topic.id).masteredCount;
-    final int total = topic.items.length;
-    final double fraction = total == 0 ? 0 : mastered / total;
-    final int unlocked = store.unlockedDay(topic);
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(18, 6, 18, 6),
-      child: SoftCard(
-        padding: const EdgeInsets.all(16),
-        onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-          builder: (_) => examMode
-              ? ExamTopicScreen(topicIndex: index)
-              : LearnTopicScreen(topicIndex: index),
-        )),
-        child: Row(
-          children: <Widget>[
-            Container(
-              width: 52,
-              height: 52,
-              decoration: BoxDecoration(
-                color: accent.soft,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(_iconFor(topic.id), color: accent.main, size: 26),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Text(
-                          topic.title,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        'Day $unlocked/${topic.totalDays}',
-                        style: TextStyle(
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w800,
-                          color: accent.main,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    topic.subtitle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 12, color: Pal.inkSoft),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: PastelProgress(
-                          value: fraction,
-                          color: accent.main,
-                          trackColor: accent.soft,
-                          height: 9,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Text(
-                        mastered == 0 && total > 0 ? '0%' : '${(fraction * 100).round()}%',
-                        style: TextStyle(
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w800,
-                          color: accent.main,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-IconData _iconFor(String topicId) {
-  switch (topicId) {
-    case 'wordSmart':
-      return Icons.auto_stories_outlined;
-    case 'gre333':
-      return Icons.school_outlined;
-    case 'previousYear':
-      return Icons.history_edu_outlined;
-    case 'oneWord':
-      return Icons.translate_outlined;
-    case 'idioms':
-      return Icons.forum_outlined;
-    default:
-      return Icons.menu_book_outlined;
-  }
-}

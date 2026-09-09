@@ -134,10 +134,10 @@ class PastelProgress extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(height),
       child: LinearProgressIndicator(
-        value: value.clamp(0.0, 1.0),
+        value: value.clamp(0.0, 1.0).toDouble(),
         minHeight: height,
         backgroundColor: trackColor,
-        valueColor: AlwaysStoppedAnimation<Color>(color),
+        valueColor: AlwaysStoppedAnimation<Color?>(color),
       ),
     );
   }

@@ -71,17 +71,17 @@ class ExamQuestion {
 List<String> allowedQuestionTypes(Topic topic) {
   switch (topic.id) {
     case 'wordSmart':
-      return <String>[qMeaning, qSynonym, qAntonym, qGap];
+      return const <String>[qMeaning, qSynonym, qAntonym, qGap];
     case 'gre333':
-      return <String>[qMeaning, qSynonym, qAntonym];
+      return const <String>[qMeaning, qSynonym, qAntonym];
     case 'previousYear':
-      return <String>[qMeaning, qSynonym, qAntonym];
+      return const <String>[qMeaning, qSynonym, qAntonym];
     case 'oneWord':
-      return <String>[qMeaning, qReverse];
+      return const <String>[qMeaning, qReverse];
     case 'idioms':
-      return <String>[qMeaning, qReverse];
+      return const <String>[qMeaning, qReverse];
     default:
-      return <String>[qMeaning];
+      return const <String>[qMeaning];
   }
 }
 
@@ -167,7 +167,7 @@ List<ExamQuestion> buildExam({
       }
     }
   }
-  if (pairs.isEmpty) return <ExamQuestion>[];
+  if (pairs.isEmpty) return const <ExamQuestion>[];
 
   final List<ExamQuestion> questions = <ExamQuestion>[];
 

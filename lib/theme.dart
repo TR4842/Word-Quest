@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Word Quest pastel palette.
 class Pal {
-  Pal._();
+  const Pal._();
 
   static const Color ink = Color(0xFF3D3654); // deep soft purple-grey
   static const Color inkSoft = Color(0xFF6F6790);
@@ -57,6 +57,18 @@ const List<BoxShadow> tinyShadow = <BoxShadow>[
   ),
 ];
 
+/// Alpha helper that works on both Flutter 3.24 (`withOpacity`) and newer
+/// SDKs that removed it in favour of `withValues`.
+Color fade(Color color, double opacity) {
+  int alpha = (opacity * 255).round();
+  if (alpha < 0) {
+    alpha = 0;
+  } else if (alpha > 255) {
+    alpha = 255;
+  }
+  return color.withAlpha(alpha);
+}
+
 ThemeData buildTheme() {
   final ColorScheme scheme = ColorScheme.fromSeed(
     seedColor: Pal.lavender,
@@ -70,36 +82,13 @@ ThemeData buildTheme() {
     onSurface: Pal.ink,
     outline: Pal.border,
     outlineVariant: Pal.border,
-    surfaceContainerHighest: const Color(0xFFEFE9FA),
     error: Pal.danger,
     errorContainer: Pal.blushSoft,
   );
 
-  final ThemeData base = ThemeData(
-    useMaterial3: true,
+  return ThemeData(
     colorScheme: scheme,
     scaffoldBackgroundColor: Pal.surface,
-  );
-
-  return base.copyWith(
-    appBarTheme: AppBarTheme(
-      backgroundColor: Pal.surface,
-      foregroundColor: Pal.ink,
-      elevation: 0,
-      scrolledUnderElevation: 0,
-      centerTitle: false,
-      titleTextStyle: base.textTheme.titleLarge?.copyWith(
-        color: Pal.ink,
-        fontWeight: FontWeight.w800,
-        letterSpacing: 0.2,
-      ),
-    ),
-    cardTheme: CardTheme(
-      color: Pal.card,
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-    ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
         backgroundColor: Pal.lavender,
@@ -124,55 +113,22 @@ ThemeData buildTheme() {
         textStyle: const TextStyle(fontWeight: FontWeight.w700),
       ),
     ),
-    navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: Pal.card,
-      indicatorColor: Pal.lavenderSoft,
-      labelTextStyle: MaterialStateProperty.resolveWith(
-        (Set<MaterialState> states) => TextStyle(
-          fontSize: 12,
-          fontWeight:
-              states.contains(MaterialState.selected) ? FontWeight.w800 : FontWeight.w600,
-          color: states.contains(MaterialState.selected) ? Pal.lavender : Pal.inkSoft,
-        ),
-      ),
-      iconTheme: MaterialStateProperty.resolveWith(
-        (Set<MaterialState> states) => IconThemeData(
-          color:
-              states.contains(MaterialState.selected) ? Pal.lavender : Pal.inkSoft,
-        ),
-      ),
-    ),
-    dialogTheme: DialogTheme(
-      backgroundColor: Pal.card,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-    ),
     bottomSheetTheme: const BottomSheetThemeData(
       backgroundColor: Pal.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
     ),
-    switchTheme: SwitchThemeData(
-      thumbColor: MaterialStateProperty.resolveWith(
-        (Set<MaterialState> states) =>
-            states.contains(MaterialState.selected) ? Colors.white : Pal.inkSoft,
-      ),
-      trackColor: MaterialStateProperty.resolveWith(
-        (Set<MaterialState> states) =>
-            states.contains(MaterialState.selected) ? Pal.lavender : Pal.border,
-      ),
-      trackOutlineColor: MaterialStateProperty.all(Colors.transparent),
-    ),
     sliderTheme: SliderThemeData(
       activeTrackColor: Pal.lavender,
       thumbColor: Pal.lavender,
       inactiveTrackColor: Pal.border,
-      overlayColor: Pal.lavender.withOpacity(0.12),
+      overlayColor: fade(Pal.lavender, 0.12),
     ),
     progressIndicatorTheme: const ProgressIndicatorThemeData(color: Pal.lavender),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: Pal.lavenderSoft.withOpacity(0.5),
+      fillColor: fade(Pal.lavenderSoft, 0.5),
       hintStyle: const TextStyle(color: Pal.inkSoft),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
@@ -184,24 +140,21 @@ ThemeData buildTheme() {
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     ),
-    textTheme: base.textTheme.apply(
-      bodyColor: Pal.ink,
-      displayColor: Pal.ink,
-    ).copyWith(
-      headlineSmall: const TextStyle(
+    textTheme: const TextTheme(
+      headlineSmall: TextStyle(
         fontWeight: FontWeight.w800,
         color: Pal.ink,
         letterSpacing: 0.2,
       ),
-      titleLarge: const TextStyle(
+      titleLarge: TextStyle(
         fontWeight: FontWeight.w800,
         color: Pal.ink,
         letterSpacing: 0.2,
       ),
-      titleMedium: const TextStyle(fontWeight: FontWeight.w700, color: Pal.ink),
-      bodyLarge: const TextStyle(height: 1.45, color: Pal.ink),
-      bodyMedium: const TextStyle(height: 1.45, color: Pal.ink),
-      labelLarge: const TextStyle(fontWeight: FontWeight.w700),
+      titleMedium: TextStyle(fontWeight: FontWeight.w700, color: Pal.ink),
+      bodyLarge: TextStyle(height: 1.45, color: Pal.ink),
+      bodyMedium: TextStyle(height: 1.45, color: Pal.ink),
+      labelLarge: TextStyle(fontWeight: FontWeight.w700),
     ),
   );
 }
