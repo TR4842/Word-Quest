@@ -60,7 +60,13 @@ const List<BoxShadow> tinyShadow = <BoxShadow>[
 /// Alpha helper that works on both Flutter 3.24 (`withOpacity`) and newer
 /// SDKs that removed it in favour of `withValues`.
 Color fade(Color color, double opacity) {
-  return color.withAlpha((opacity * 255).round().clamp(0, 255));
+  int alpha = (opacity * 255).round();
+  if (alpha < 0) {
+    alpha = 0;
+  } else if (alpha > 255) {
+    alpha = 255;
+  }
+  return color.withAlpha(alpha);
 }
 
 ThemeData buildTheme() {

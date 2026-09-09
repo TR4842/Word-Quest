@@ -1,1 +1,11 @@
-# No extra lints. `flutter analyze` should only fail on compile errors.
+# `flutter analyze` treats infos as fatal. Ignore hint-level diagnostics so
+# the APK workflow fails only on real Dart errors.
+analyzer:
+  errors:
+    deprecated_member_use: ignore
+    unused_element: ignore
+    unused_field: ignore
+    unused_import: ignore
+    unused_local_variable: ignore
+    dead_code: ignore
+    todo: ignore
