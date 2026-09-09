@@ -186,7 +186,7 @@ class _DayExamRow extends StatelessWidget {
                     : passed
                         ? Icons.emoji_events_rounded
                         : Icons.edit_note_outlined,
-                color: locked ? Pal.inkSoft.withOpacity(0.5) : accent.main,
+                color: locked ? fade(Pal.inkSoft, 0.5) : accent.main,
               ),
             ),
             const SizedBox(width: 12),
@@ -214,7 +214,7 @@ class _DayExamRow extends StatelessWidget {
             ),
             FilledButton(
               style: FilledButton.styleFrom(
-                backgroundColor: locked ? Pal.inkSoft.withOpacity(0.25) : accent.main,
+                backgroundColor: locked ? fade(Pal.inkSoft, 0.25) : accent.main,
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               ),
               onPressed: locked
@@ -407,7 +407,7 @@ class _CountChoice extends StatelessWidget {
               'questions',
               style: TextStyle(
                 fontSize: 11.5,
-                color: selected ? Colors.white.withOpacity(0.9) : Pal.inkSoft,
+                color: selected ? fade(Colors.white, 0.9) : Pal.inkSoft,
               ),
             ),
           ],

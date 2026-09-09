@@ -292,7 +292,7 @@ class _DayChip extends StatelessWidget {
             ? accent.main
             : accent.soft;
     final Color fg = locked
-        ? Pal.inkSoft.withOpacity(0.5)
+        ? fade(Pal.inkSoft, 0.5)
         : selected
             ? Colors.white
             : accent.main;
@@ -628,7 +628,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                 child: LinearProgressIndicator(
                   value: (_pos) / _total,
                   minHeight: 8,
-                  backgroundColor: Colors.white.withOpacity(0.7),
+                  backgroundColor: fade(Colors.white, 0.7),
                   valueColor: AlwaysStoppedAnimation<Color?>(accent.main),
                 ),
               ),
@@ -692,7 +692,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
               _flipped
                   ? 'Tap the card to flip back'
                   : 'Tap the card to reveal the meaning',
-              style: TextStyle(color: accent.main.withOpacity(0.8), fontSize: 12.5),
+              style: TextStyle(color: fade(accent.main, 0.8), fontSize: 12.5),
             ),
             const SizedBox(height: 18),
           ],

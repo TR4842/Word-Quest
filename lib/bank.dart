@@ -174,7 +174,7 @@ class _TopicMistakeSection extends StatelessWidget {
             SoftCard(
               padding: const EdgeInsets.all(14),
               radius: 18,
-              color: accent.soft.withOpacity(0.6),
+              color: fade(accent.soft, 0.6),
               child: Row(
                 children: <Widget>[
                   const Icon(Icons.sentiment_satisfied_alt_outlined,

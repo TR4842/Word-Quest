@@ -377,7 +377,7 @@ class DashboardView extends StatelessWidget {
             Center(
               child: Text(
                 'Tap a topic to start learning or taking exams',
-                style: TextStyle(color: Pal.inkSoft.withOpacity(0.85), fontSize: 12.5),
+                style: TextStyle(color: fade(Pal.inkSoft, 0.85), fontSize: 12.5),
               ),
             ),
           ],
@@ -406,7 +406,7 @@ class _MiniStat extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.75),
+          color: fade(Colors.white, 0.75),
           borderRadius: BorderRadius.circular(18),
         ),
         child: Column(
