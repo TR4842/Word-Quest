@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'exam.dart' as exam_screen; // exam flow entry points
-import 'home.dart';
 import 'store.dart';
+import 'topic_card.dart';
 import 'theme.dart';
 import 'widgets.dart';
 import 'wordlist.dart';
@@ -644,13 +644,13 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                     duration: const Duration(milliseconds: 220),
                     child: _flipped
                         ? _CardBack(
-                            key: ValueKey<int>('b$idx$_pos'),
+                            key: ValueKey<String>('b$idx$_pos'),
                             topic: widget.topic,
                             item: item,
                             accent: accent,
                           )
                         : _CardFront(
-                            key: ValueKey<int>('f$idx$_pos'),
+                            key: ValueKey<String>('f$idx$_pos'),
                             item: item,
                             accent: accent,
                           ),

@@ -1,4 +1,4 @@
-# `flutter analyze` treats infos as fatal. Ignore hint-level diagnostics so
+# `flutter analyze` treats infos as fatal. Ignore unused-member hints so
 # the APK workflow fails only on real Dart errors.
 analyzer:
   errors:
@@ -8,4 +8,3 @@ analyzer:
     unused_import: ignore
     unused_local_variable: ignore
     dead_code: ignore
-    todo: ignore
