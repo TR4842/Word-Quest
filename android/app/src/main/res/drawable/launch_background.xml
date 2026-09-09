@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pastel launch background used while the Flutter engine starts. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="315"
+                android:startColor="#EFE9FB"
+                android:endColor="#FFE9F1"
+                android:type="linear" />
+        </shape>
+    </item>
+</layer-list>
