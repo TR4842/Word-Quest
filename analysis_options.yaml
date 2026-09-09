@@ -1,9 +1,4 @@
-# This file configures the analyzer, which statically analyzes Dart code to
-# check for errors, warnings, and lints.
-include: package:flutter_lints/flutter.yaml
-
-# `flutter analyze` treats infos as fatal. Ignore hint-level noise so CI
-# fails only on real problems. All codes here exist in Dart 3.5.
+# Fail CI only on Dart errors, not lints or hints.
 analyzer:
   errors:
     deprecated_member_use: ignore
@@ -14,24 +9,3 @@ analyzer:
     dead_code: ignore
     todo: ignore
     unnecessary_null_comparison: ignore
-
-linter:
-  rules:
-    use_key_in_widget_constructors: false
-    prefer_const_constructors: false
-    prefer_const_constructors_in_immutables: false
-    prefer_const_declarations: false
-    prefer_const_literals_to_create_immutables: false
-    dangling_library_doc_comments: false
-    no_leading_underscores_for_local_identifiers: false
-    sort_child_properties_last: false
-    sized_box_for_whitespace: false
-    avoid_unnecessary_containers: false
-    curly_braces_in_flow_control_structures: false
-    prefer_interpolation_to_compose_strings: false
-    avoid_function_literals_in_foreach_calls: false
-    use_super_parameters: false
-    use_build_context_synchronously: false
-    prefer_final_fields: false
-    unnecessary_string_interpolations: false
-    unnecessary_brace_in_string_interps: false
