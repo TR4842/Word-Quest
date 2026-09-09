@@ -8,7 +8,7 @@ import 'package:flutter/services.dart' show rootBundle;
 /// The JSON is produced from the workbook sources by `tool/export_vocab.py`,
 /// so the app never needs a network connection.
 class Vocab {
-  Vocab._();
+  const Vocab._();
 
   static List<Topic> topics = const <Topic>[];
 
@@ -127,7 +127,7 @@ class VocabItem {
 
 /// A topic (Word Smart, GRE 333, …) plus its day partition.
 class Topic {
-  Topic({required this.id, required this.title, required this.subtitle, required this.items});
+  const Topic({required this.id, required this.title, required this.subtitle, required this.items});
 
   final String id;
   final String title;

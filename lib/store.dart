@@ -16,7 +16,7 @@ const String markPractice = 'p';
 
 /// One saved wrong answer, kept separately per topic.
 class MistakeRecord {
-  MistakeRecord({
+  const MistakeRecord({
     required this.id,
     required this.topicId,
     required this.day,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Word Quest pastel palette.
 class Pal {
-  Pal._();
+  const Pal._();
 
   static const Color ink = Color(0xFF3D3654); // deep soft purple-grey
   static const Color inkSoft = Color(0xFF6F6790);
