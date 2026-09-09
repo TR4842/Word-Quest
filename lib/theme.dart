@@ -94,12 +94,6 @@ ThemeData buildTheme() {
         letterSpacing: 0.2,
       ),
     ),
-    cardTheme: CardTheme(
-      color: Pal.card,
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-    ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
         backgroundColor: Pal.lavender,
