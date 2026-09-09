@@ -84,16 +84,16 @@ class TopicStats {
   factory TopicStats.fromJson(Map<String, dynamic> m) {
     final TopicStats s = TopicStats();
     final Map<String, dynamic> learned =
-        (m['learned'] as Map<String, dynamic>?) ?? <String, dynamic>{};
+        (m['learned'] as Map<String, dynamic>?) ?? const <String, dynamic>{};
     learned.forEach((String k, dynamic v) {
       s.learned[int.parse(k)] = v as String;
     });
-    final List<dynamic> passed = (m['passed'] as List<dynamic>?) ?? <dynamic>[];
+    final List<dynamic> passed = (m['passed'] as List<dynamic>?) ?? const <dynamic>[];
     for (final dynamic d in passed) {
       s.passedDays.add(d as int);
     }
     final Map<String, dynamic> best =
-        (m['best'] as Map<String, dynamic>?) ?? <String, dynamic>{};
+        (m['best'] as Map<String, dynamic>?) ?? const <String, dynamic>{};
     best.forEach((String k, dynamic v) {
       s.best[int.parse(k)] = v as int;
     });
@@ -204,7 +204,7 @@ class AppStore extends ChangeNotifier {
   }
 
   List<MistakeRecord> mistakesFor(String topicId) =>
-      _mistakes[topicId] ?? <MistakeRecord>[];
+      _mistakes[topicId] ?? const <MistakeRecord>[];
 
   void addMistake({
     required String topicId,

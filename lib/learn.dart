@@ -113,7 +113,8 @@ class _LearnTopicScreenState extends State<LearnTopicScreen> {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: topic.totalDays,
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  separatorBuilder: (BuildContext context, int index) =>
+                      const SizedBox(width: 8),
                   itemBuilder: (BuildContext context, int d) {
                     final int day = d + 1;
                     final bool passed = stats.passed(day);

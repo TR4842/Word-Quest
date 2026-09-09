@@ -10,7 +10,7 @@ import 'package:flutter/services.dart' show rootBundle;
 class Vocab {
   Vocab._();
 
-  static List<Topic> topics = <Topic>[];
+  static List<Topic> topics = const <Topic>[];
 
   static Topic byId(String id) {
     for (final Topic t in topics) {
@@ -101,8 +101,9 @@ class VocabItem {
   String get gapSentence {
     final String lower = term.toLowerCase();
     final String upper = term.toUpperCase();
-    final String title =
-        term.isEmpty ? term : term[0].toUpperCase() + term.substring(1).toLowerCase();
+    final String title = term.isEmpty
+        ? term
+        : '${term[0].toUpperCase()}${term.substring(1).toLowerCase()}';
     String s = ex;
     s = s.replaceAll(upper, '______');
     s = s.replaceAll(lower, '______');

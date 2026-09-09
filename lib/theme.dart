@@ -127,18 +127,18 @@ ThemeData buildTheme() {
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: Pal.card,
       indicatorColor: Pal.lavenderSoft,
-      labelTextStyle: MaterialStateProperty.resolveWith(
-        (Set<MaterialState> states) => TextStyle(
+      labelTextStyle: WidgetStateProperty.resolveWith(
+        (Set<WidgetState> states) => TextStyle(
           fontSize: 12,
           fontWeight:
-              states.contains(MaterialState.selected) ? FontWeight.w800 : FontWeight.w600,
-          color: states.contains(MaterialState.selected) ? Pal.lavender : Pal.inkSoft,
+              states.contains(WidgetState.selected) ? FontWeight.w800 : FontWeight.w600,
+          color: states.contains(WidgetState.selected) ? Pal.lavender : Pal.inkSoft,
         ),
       ),
-      iconTheme: MaterialStateProperty.resolveWith(
-        (Set<MaterialState> states) => IconThemeData(
+      iconTheme: WidgetStateProperty.resolveWith(
+        (Set<WidgetState> states) => IconThemeData(
           color:
-              states.contains(MaterialState.selected) ? Pal.lavender : Pal.inkSoft,
+              states.contains(WidgetState.selected) ? Pal.lavender : Pal.inkSoft,
         ),
       ),
     ),
@@ -153,15 +153,15 @@ ThemeData buildTheme() {
       ),
     ),
     switchTheme: SwitchThemeData(
-      thumbColor: MaterialStateProperty.resolveWith(
-        (Set<MaterialState> states) =>
-            states.contains(MaterialState.selected) ? Colors.white : Pal.inkSoft,
+      thumbColor: WidgetStateProperty.resolveWith(
+        (Set<WidgetState> states) =>
+            states.contains(WidgetState.selected) ? Colors.white : Pal.inkSoft,
       ),
-      trackColor: MaterialStateProperty.resolveWith(
-        (Set<MaterialState> states) =>
-            states.contains(MaterialState.selected) ? Pal.lavender : Pal.border,
+      trackColor: WidgetStateProperty.resolveWith(
+        (Set<WidgetState> states) =>
+            states.contains(WidgetState.selected) ? Pal.lavender : Pal.border,
       ),
-      trackOutlineColor: MaterialStateProperty.all(Colors.transparent),
+      trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
     ),
     sliderTheme: SliderThemeData(
       activeTrackColor: Pal.lavender,
