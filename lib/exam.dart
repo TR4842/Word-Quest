@@ -686,7 +686,7 @@ class _ExamPlayerScreenState extends State<ExamPlayerScreen> {
                     value: (_pos + 1) / _questions.length,
                     minHeight: 8,
                     backgroundColor: Pal.border,
-                    valueColor: AlwaysStoppedAnimation<Color>(_accent.main),
+                    valueColor: AlwaysStoppedAnimation<Color?>(_accent.main),
                   ),
                 ),
                 const SizedBox(height: 10),

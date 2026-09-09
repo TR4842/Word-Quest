@@ -127,7 +127,7 @@ ThemeData buildTheme() {
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: Pal.card,
       indicatorColor: Pal.lavenderSoft,
-      labelTextStyle: WidgetStateProperty.resolveWith(
+      labelTextStyle: WidgetStateProperty<TextStyle?>.resolveWith(
         (Set<WidgetState> states) => TextStyle(
           fontSize: 12,
           fontWeight:
@@ -135,7 +135,7 @@ ThemeData buildTheme() {
           color: states.contains(WidgetState.selected) ? Pal.lavender : Pal.inkSoft,
         ),
       ),
-      iconTheme: WidgetStateProperty.resolveWith(
+      iconTheme: WidgetStateProperty<IconThemeData?>.resolveWith(
         (Set<WidgetState> states) => IconThemeData(
           color:
               states.contains(WidgetState.selected) ? Pal.lavender : Pal.inkSoft,
@@ -153,15 +153,15 @@ ThemeData buildTheme() {
       ),
     ),
     switchTheme: SwitchThemeData(
-      thumbColor: WidgetStateProperty.resolveWith(
+      thumbColor: WidgetStateProperty<Color?>.resolveWith(
         (Set<WidgetState> states) =>
             states.contains(WidgetState.selected) ? Colors.white : Pal.inkSoft,
       ),
-      trackColor: WidgetStateProperty.resolveWith(
+      trackColor: WidgetStateProperty<Color?>.resolveWith(
         (Set<WidgetState> states) =>
             states.contains(WidgetState.selected) ? Pal.lavender : Pal.border,
       ),
-      trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
+      trackOutlineColor: WidgetStateProperty<Color?>.all(Colors.transparent),
     ),
     sliderTheme: SliderThemeData(
       activeTrackColor: Pal.lavender,

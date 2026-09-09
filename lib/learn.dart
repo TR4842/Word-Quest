@@ -629,7 +629,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                   value: (_pos) / _total,
                   minHeight: 8,
                   backgroundColor: Colors.white.withOpacity(0.7),
-                  valueColor: AlwaysStoppedAnimation<Color>(accent.main),
+                  valueColor: AlwaysStoppedAnimation<Color?>(accent.main),
                 ),
               ),
             ),
