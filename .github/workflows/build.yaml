@@ -1,6 +1,6 @@
 name: Build Android APK
 
-# The single workflow used for continuous checks and APK builds.
+# The single workflow used for continuous checks and signed APK builds.
 on:
   push:
     branches:
@@ -51,19 +51,74 @@ jobs:
       - name: Unit tests
         run: flutter test --no-pub
 
-      - name: Build release APK
+      # A CI runner's debug keystore is ephemeral. Never publish an APK signed
+      # with it because users would not be able to install later updates over it.
+      - name: Prepare persistent Android release signing
+        id: release_signing
+        env:
+          WORD_QUEST_KEYSTORE_BASE64: ${{ secrets.WORD_QUEST_KEYSTORE_BASE64 }}
+          WORD_QUEST_KEYSTORE_PASSWORD: ${{ secrets.WORD_QUEST_KEYSTORE_PASSWORD }}
+          WORD_QUEST_KEY_ALIAS: ${{ secrets.WORD_QUEST_KEY_ALIAS }}
+          WORD_QUEST_KEY_PASSWORD: ${{ secrets.WORD_QUEST_KEY_PASSWORD }}
+        run: |
+          set -e
+          if [ -z "$WORD_QUEST_KEYSTORE_BASE64" ] && \
+             [ -z "$WORD_QUEST_KEYSTORE_PASSWORD" ] && \
+             [ -z "$WORD_QUEST_KEY_ALIAS" ] && \
+             [ -z "$WORD_QUEST_KEY_PASSWORD" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ -z "$WORD_QUEST_KEYSTORE_BASE64" ] || \
+             [ -z "$WORD_QUEST_KEYSTORE_PASSWORD" ] || \
+             [ -z "$WORD_QUEST_KEY_ALIAS" ] || \
+             [ -z "$WORD_QUEST_KEY_PASSWORD" ]; then
+            echo "::error::Configure all four WORD_QUEST Android signing secrets, or remove all of them."
+            exit 1
+          fi
+
+          keystore="$RUNNER_TEMP/word-quest-release.jks"
+          printf '%s' "$WORD_QUEST_KEYSTORE_BASE64" | base64 --decode > "$keystore"
+          if [ ! -s "$keystore" ]; then
+            echo "::error::The decoded Android keystore is empty."
+            exit 1
+          fi
+          chmod 600 "$keystore"
+          echo "configured=true" >> "$GITHUB_OUTPUT"
+
+      - name: Build release APK with persistent signing
+        if: steps.release_signing.outputs.configured == 'true'
+        env:
+          WORD_QUEST_KEYSTORE_PATH: ${{ runner.temp }}/word-quest-release.jks
+          WORD_QUEST_KEYSTORE_PASSWORD: ${{ secrets.WORD_QUEST_KEYSTORE_PASSWORD }}
+          WORD_QUEST_KEY_ALIAS: ${{ secrets.WORD_QUEST_KEY_ALIAS }}
+          WORD_QUEST_KEY_PASSWORD: ${{ secrets.WORD_QUEST_KEY_PASSWORD }}
+        run: flutter build apk --release --no-pub
+
+      # Still compile the Android release variant on PRs and repositories that
+      # have not configured a persistent signing key, but do not distribute it.
+      - name: Build APK for CI validation only (debug signing)
+        if: steps.release_signing.outputs.configured != 'true'
         run: flutter build apk --release --no-pub
 
       - name: Collect APK
+        if: steps.release_signing.outputs.configured == 'true'
         run: |
           mkdir -p apk-artifact
           cp build/app/outputs/flutter-apk/app-release.apk \
-             apk-artifact/WordQuest-v1.0.0.apk
+             apk-artifact/WordQuest-v1.0.1.apk
 
       - name: Upload APK artifact
+        if: steps.release_signing.outputs.configured == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: WordQuest-APK
-          path: apk-artifact/WordQuest-v1.0.0.apk
+          path: apk-artifact/WordQuest-v1.0.1.apk
           if-no-files-found: error
           retention-days: 14
+
+      - name: Explain why no distributable APK was uploaded
+        if: steps.release_signing.outputs.configured != 'true'
+        run: |
+          echo "::notice::Tests and the Android build passed, but no APK was published. Configure the persistent WORD_QUEST signing secrets to create upgradeable release APKs."

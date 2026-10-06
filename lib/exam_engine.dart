@@ -283,8 +283,11 @@ List<String> _makeOptions({
   return options;
 }
 
-/// Minimum questions answered correctly to pass (>= 90%).
-int passThreshold(int total) => (total * 9 + 9) ~/ 10;
+/// Percentage of exam questions required to pass and unlock the next day.
+const int passPercent = 75;
+
+/// Minimum number of correct answers required to reach [passPercent] percent.
+int passThreshold(int total) => (total * passPercent + 99) ~/ 100;
 
 /// Exam duration in seconds = half of the question count, in minutes.
 int examDurationSeconds(int questionCount) => questionCount * 30;

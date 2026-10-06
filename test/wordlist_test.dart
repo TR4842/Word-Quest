@@ -107,10 +107,10 @@ void main() {
   });
 
   group('Exam rules', () {
-    test('90% pass thresholds', () {
-      expect(passThreshold(20), 18);
-      expect(passThreshold(25), 23);
-      expect(passThreshold(30), 27);
+    test('75% pass thresholds', () {
+      expect(passThreshold(20), 15);
+      expect(passThreshold(25), 19);
+      expect(passThreshold(30), 23);
     });
 
     test('time is half the question count, in minutes', () {
