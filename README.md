@@ -28,7 +28,7 @@
   - Idioms & phrases (475)
 - **Exam section** – a separate, **day‑wise exam per topic**; the syllabus is exactly the day’s learning goal.
   - Word Smart exams mix **word meaning, synonym, antonym and fill‑in‑the‑gap** questions.
-  - You must score **90% accuracy** per topic per day to unlock the **next day’s learning and exam**.
+  - Score **75%** on a day’s exam to unlock the next day **in that topic**. Topics progress independently; other topic goals and marking every word as known are not prerequisites.
   - Choose **20, 25 or 30 questions** — the timer runs for **half that many minutes** (20 → 10 minutes).
   - **Randomised on every attempt** (question order and option order).
 - **Mistake bank** – wrong answers are saved **separately for each topic** for review and practice.
@@ -39,15 +39,35 @@
 ## 📲 Getting the APK
 
 The GitHub Actions workflow ([`.github/workflows/build.yaml`](.github/workflows/build.yaml))
-builds the release APK on every push:
+runs analysis, tests, and an Android build. It uploads a distributable APK only
+when persistent Android release signing is configured, so separate CI runs do
+not produce APKs with incompatible, temporary debug keys.
 
-1. Open the **Actions** tab of this repository.
-2. Select the **Build Android APK** workflow run for `main` (or `workflow_dispatch`).
-3. Download the **WordQuest-APK** artifact and install `WordQuest-v1.0.0.apk` on your phone
-   (allow “install from unknown sources” when prompted).
+To enable signed APK artifacts, add these **GitHub Actions secrets** to the
+repository:
 
-The workflow is deliberately kept light so it stays inside GitHub’s free build limits:
-`flutter analyze` → `flutter test` → a single release APK, on `ubuntu-latest`.
+- `WORD_QUEST_KEYSTORE_BASE64` — base64-encoded JKS/keystore file
+- `WORD_QUEST_KEYSTORE_PASSWORD`
+- `WORD_QUEST_KEY_ALIAS`
+- `WORD_QUEST_KEY_PASSWORD`
+
+Use the **same private keystore that signed the already-installed app**. The
+workflow decodes it only into the runner's temporary directory and publishes
+`WordQuest-v1.0.1.apk` as the **WordQuest-APK** artifact. On Linux, encode a
+keystore with `base64 -w0 your-release-key.jks`; on macOS, use
+`base64 < your-release-key.jks | tr -d '\n'`.
+
+The previous Gradle configuration used Android's debug key for release builds.
+Debug keys on local machines or fresh CI runners are not necessarily the same,
+so Android can only perform an in-place update when the new APK is signed with
+the original install's key. If an old CI signing key is no longer available,
+Android cannot accept a replacement signature as an update; do not uninstall
+an app whose local data you need. The application ID and SharedPreferences
+storage keys are kept stable, and the Android version code is incremented, so
+matching-signature upgrades preserve the existing profile and progress.
+
+The workflow remains light: `flutter analyze` → `flutter test` → one Android
+release build on `ubuntu-latest`.
 
 ## 🛠 Building locally
 
@@ -59,6 +79,11 @@ flutter test
 flutter build apk --release
 # APK → build/app/outputs/flutter-apk/app-release.apk
 ```
+
+For an update-compatible local release, set `WORD_QUEST_KEYSTORE_PATH`,
+`WORD_QUEST_KEYSTORE_PASSWORD`, `WORD_QUEST_KEY_ALIAS`, and
+`WORD_QUEST_KEY_PASSWORD` to the same signing key used by the installed app.
+Without them, the local release uses the machine's debug key for testing only.
 
 ## 🧱 Repository layout
 
@@ -72,9 +97,9 @@ lib/                Dart sources (UI + exam engine + offline store)
 tool/
   export_vocab.py   rebuilds assets/data/vocab.json from the *.xlsx workbooks
   make_icons.py     rebuilds Android launcher/splash artwork from logo.png
-test/               unit tests for the day split & exam engine
+test/               unit tests for day splits, exams & saved progress
 Word_Smart_1_All_Vocabularies.xlsx …   source word lists (data of truth)
-.github/workflows/build.yaml           GitHub Actions CI → release APK
+.github/workflows/build.yaml           GitHub Actions CI → signed APK (when configured)
 ```
 
 All content ships inside the APK via `assets/data/vocab.json` — the app works

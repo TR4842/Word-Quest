@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'exam_engine.dart';
 import 'wordlist.dart';
 
+// Persisted keys are part of the upgrade-compatibility contract. Keep them
+// stable, or add an explicit migration before changing/removing an old key.
 const String _kProfile = 'wq_profile_v1';
 const String _kStats = 'wq_stats_v1';
 const String _kMistakes = 'wq_mistakes_v1';
@@ -57,7 +59,7 @@ class TopicStats {
   /// item index -> 'k' (known) / 'p' (needs practice)
   final Map<int, String> learned = <int, String>{};
 
-  /// Days passed with >= 90%.
+  /// Days passed with at least [passPercent] percent.
   final Set<int> passedDays = <int>{};
 
   /// Day -> best accuracy percentage.
@@ -97,6 +99,11 @@ class TopicStats {
     best.forEach((String k, dynamic v) {
       s.best[int.parse(k)] = v as int;
     });
+    // A prior best attempt may have missed the old 90% mark but now qualifies
+    // under the 75% rule. Keep historical progress and unlocks in sync.
+    for (final MapEntry<int, int> entry in s.best.entries) {
+      if (entry.value >= passPercent) s.passedDays.add(entry.key);
+    }
     return s;
   }
 }
@@ -148,11 +155,14 @@ class AppStore extends ChangeNotifier {
     return s;
   }
 
-  /// How many days of [topic] are unlocked (always at least one).
+  /// The next available day for [topic] (always at least one).
+  ///
+  /// Unlock progress is scoped to this topic: passing a day does not depend on
+  /// marks in every word or progress in any other topic.
   int unlockedDay(Topic topic) {
     final TopicStats s = statsFor(topic.id);
     int d = 1;
-    while (s.passed(d) && d < topic.totalDays) {
+    while (d < topic.totalDays && s.passed(d)) {
       d++;
     }
     return d;
@@ -196,7 +206,8 @@ class AppStore extends ChangeNotifier {
     final int percent = total == 0 ? 0 : ((correct * 100) / total).round();
     final int prevBest = s.bestFor(day);
     if (percent > prevBest) s.best[day] = percent;
-    final bool passed = percent >= 90 && !s.passed(day);
+    final bool passed =
+        total > 0 && correct >= passThreshold(total) && !s.passed(day);
     if (passed) s.passedDays.add(day);
     _save();
     notifyListeners();

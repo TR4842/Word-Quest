@@ -51,7 +51,7 @@ class AboutScreen extends StatelessWidget {
           const SizedBox(height: 4),
           const Center(
             child: Text(
-              'Offline vocabulary learning app · v1.0.0',
+              'Offline vocabulary learning app · v1.0.1',
               style: TextStyle(color: Pal.inkSoft, fontWeight: FontWeight.w600),
             ),
           ),
@@ -63,8 +63,9 @@ class AboutScreen extends StatelessWidget {
               'important previous-year bank vocabulary, one word '
               'substitutions and idioms & phrases. Learn at least 20 words a '
               'day, then prove yourself with a timed day-wise exam. Score '
-              '90% or more to unlock the next day. No internet, no ads, no '
-              'text-to-speech — just focused practice.',
+              '75% or more to unlock the next day in that topic. Each topic '
+              'progresses independently. No internet, ads, or text-to-speech. '
+              'Just focused practice.',
               style: TextStyle(height: 1.55, color: Pal.inkSoft),
             ),
           ),

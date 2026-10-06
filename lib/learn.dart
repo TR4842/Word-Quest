@@ -25,8 +25,9 @@ class LearnTabView extends StatelessWidget {
         const _TabIntro(
           title: 'Learning',
           message:
-              'Each topic is split into days of 20 words. Study a day, then '
-              'score 90% in that day’s exam to unlock the next one.',
+              'Each topic has 20-word days. Score 75% in a day’s exam to '
+              'unlock the next day in that topic. Topics progress '
+              'independently; you do not need to mark every word as known.',
         ),
         const SizedBox(height: 6),
         for (int i = 0; i < Vocab.topics.length; i++) TopicCard(index: i),
@@ -119,7 +120,7 @@ class _LearnTopicScreenState extends State<LearnTopicScreen> {
                     final bool passed = stats.passed(day);
                     final bool isCurrent = day == _day;
                     final bool locked = day > unlocked;
-                    final bool best = stats.bestFor(day) >= 90;
+                    final bool best = stats.bestFor(day) >= 75;
                     return _DayChip(
                       day: day,
                       selected: isCurrent,
@@ -153,7 +154,7 @@ class _LearnTopicScreenState extends State<LearnTopicScreen> {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        'Score 90% in the Day ${_day - 1} exam to unlock '
+                        'Score 75% in the Day ${_day - 1} exam to unlock '
                         'this day’s learning and exam.',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
@@ -571,7 +572,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
           content: Text(
             known
                 ? 'You finished all $_total words. Keep going — now try the '
-                    'day exam and aim for 90%!'
+                    'day exam and aim for 75%!'
                 : 'You finished all $_total words — some need practice, and '
                     'that is exactly what the exam is for!',
           ),

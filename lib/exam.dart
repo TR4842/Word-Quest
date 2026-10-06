@@ -37,7 +37,8 @@ class ExamTabView extends StatelessWidget {
               const SizedBox(height: 6),
               const Text(
                 'Each topic has its own day-wise exam. The syllabus is exactly '
-                'that day’s learning goal. Score 90% to unlock the next day.',
+                'that day’s learning goal. Score 75% to unlock the next day '
+                'in that topic; progress in other topics is not required.',
                 style: TextStyle(color: Pal.inkSoft, height: 1.5),
               ),
             ],
@@ -85,7 +86,7 @@ class ExamTopicScreen extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Pill(
-                      text: 'Pass mark: 90%',
+                      text: 'Pass mark: 75%',
                       color: Pal.blush,
                       soft: Pal.blushSoft,
                       icon: Icons.gpp_good_outlined,
@@ -129,7 +130,8 @@ class ExamTopicScreen extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               const Text(
-                'A day unlocks after you pass the previous day’s exam.',
+                'Pass the previous day’s exam to unlock the next day in this '
+                'topic. No other topic goals are required.',
                 style: TextStyle(color: Pal.inkSoft, fontSize: 12.5),
               ),
               const SizedBox(height: 8),
@@ -204,11 +206,11 @@ class _DayExamRow extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     locked
-                        ? 'Pass Day ${day - 1} with 90% to unlock'
+                        ? 'Pass Day ${day - 1} with 75% to unlock'
                         : passed
                             ? 'Passed ✓  Best $best%'
                             : best > 0
-                                ? 'Best attempt: $best%  · need 90%'
+                                ? 'Best attempt: $best%  · need 75%'
                                 : 'Not attempted yet',
                     style: const TextStyle(color: Pal.inkSoft, fontSize: 12.5),
                   ),
@@ -330,7 +332,7 @@ class _ExamStartScreenState extends State<ExamStartScreen> {
                         ),
                         const SizedBox(height: 2),
                         const Text(
-                          'Time = half of the questions · pass at 90% accuracy',
+                          'Time = half of the questions · pass at 75% accuracy',
                           style: TextStyle(color: Pal.inkSoft, fontSize: 12.5),
                         ),
                       ],
@@ -885,7 +887,8 @@ class ExamResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final TopicColor accent =
         topicAccents[Vocab.topics.indexOf(topic) % topicAccents.length];
-    final bool pass = passed || percent >= 90;
+    final bool pass =
+        passed || (total > 0 && correct >= engine.passThreshold(total));
 
     return Scaffold(
       appBar: AppBar(
@@ -938,7 +941,7 @@ class ExamResultScreen extends StatelessWidget {
                   ? (newDayUnlocked
                       ? '🎉 Passed! Day ${day + 1} is unlocked.'
                       : '🎉 Passed!')
-                  : 'Not yet — you need 90% to pass.',
+                  : 'Not yet — you need 75% to pass.',
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
             ),
